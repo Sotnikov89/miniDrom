@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -27,5 +27,5 @@ public class Advert {
     private boolean status;
     @ManyToOne
     private User user;
-    private LocalDateTime created;
+    private LocalDate created;
 }

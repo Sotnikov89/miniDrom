@@ -1,9 +1,6 @@
 package ru.drom.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -19,5 +16,7 @@ public class Model {
     @Column(unique = true)
     private String name;
     @ManyToOne
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Make make;
 }
