@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -23,9 +23,10 @@ public class Advert {
     @OneToOne
     private TypeBody typeBody;
     private int mileage;
+    private int price;
     private int photoId;
     private boolean status;
     @ManyToOne
     private User user;
-    private LocalDate created;
+    private LocalDateTime created;
 }

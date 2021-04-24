@@ -34,6 +34,7 @@ CREATE TABLE advert (
                       typebody int not null references typebody(id),
                       password varchar (50) not null,
                       mileage int,
+                      price int,
                       photoId int,
                       status boolean,
                       users int not null references users(id),
