@@ -19,7 +19,7 @@ public class ImplAdvertMapper implements AdvertMapper{
                 .photoId(advert.getPhotoId())
                 .price(advert.getPrice())
                 .user(advert.getUser())
-                .status(advert.isSold())
+                .sold(advert.isSold())
                 .typeBody(advert.getTypeBody())
                 .model(advert.getModel())
                 .yearOfIssue(advert.getYearOfIssue())

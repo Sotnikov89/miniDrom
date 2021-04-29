@@ -25,7 +25,9 @@
                 for(let i=0; i<data.length; i++) {
                     $("#make").append(new Option(data[i].name, data[i].id));
                     for(let y=0; y<data[i].models.length; y++) {
-                        $("#model").append(new Option(data[i].name + " - " + data[i].models[y].name, data[i].models[y].id));
+                        let option = new Option(data[i].models[y].name, data[i].models[y].id);
+                        option.setAttribute("id", data[i].id);
+                        $("#model").append(option);
                     }
                 }
             }).fail(function(err){
@@ -48,10 +50,10 @@
                 dataType: 'json',
                 data: {getByUser: true},
             }).done(function(data) {
-                $('#exit').append("<div class='col-md-auto'> <h4>" + "Здравствуйте " + data[0].user.name + "!</h4></div>")
+                $('#exit').after("<div class='col-md-auto'> <h4>" + "Здравствуйте " + data[0].user.name + "!</h4></div>")
                 for (let i=0; i<data.length; i++) {
-                    var status;
-                    var done = "Активна"
+                    let status;
+                    let done = "Активна"
                     if (data[i].sold) {
                         status=" checked";
                         done = "Продана";
@@ -89,7 +91,7 @@
                                         "<div class='col-12 col-sm-1'>" +
                                         "</div>" +
                                         "<div class='col-12 col-sm-11 form-check form-switch'>" +
-                                            "<input class='form-check-input' type='checkbox' id='switch'" + status + ">" +
+                                            "<input class='form-check-input' type='checkbox' id='switch" + data[i].id + "'" + status + " onchange='advertSell(" + data[i].id + ")'>" +
                                             "<label class='form-check-label' for='switch'>" + done + "</label>" +
                                         "</div>" +
                                     "</div>" +
@@ -105,6 +107,27 @@
                 alert(err);
             });
         })
+        function showModelByMake() {
+            var makeId = $("#make").val();
+            $("#model option").each(function () {
+                let model = $(this);
+                if (model.attr("id") === makeId) {
+                    model.show();
+                } else {
+                    model.hide();
+                }
+            })
+        }
+        function advertSell(id){
+            let sw = document.getElementById("switch"+id)
+            $.ajax({
+                type: 'POST',
+                url: 'advert',
+                dataType: 'json',
+                data: {id: id, sold: sw.checked},
+            }).done(function() {
+            })
+        }
     </script>
 </head>
 <body>
@@ -132,7 +155,7 @@
     <div class="row pt-2 row-cols-auto justify-content-center">
         <div class="col-6 col-md-2">
             Марка
-            <select class='form-select' aria-label='multiple select example' id='make' name='make'>
+            <select class='form-select' aria-label='multiple select example' id='make' name='make' onchange="showModelByMake()">
             </select>
         </div>
         <div class="col-6 col-md-2">

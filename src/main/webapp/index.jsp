@@ -25,7 +25,9 @@
                 for(let i=0; i<data.length; i++) {
                     $("#FindMake").append(new Option(data[i].name, data[i].id));
                     for(let y=0; y<data[i].models.length; y++) {
-                        $("#FindModel").append(new Option(data[i].name + " - " + data[i].models[y].name, data[i].models[y].id));
+                        let option = new Option(data[i].models[y].name, data[i].models[y].id);
+                        option.setAttribute("id", data[i].id);
+                        $("#FindModel").append(option);
                     }
                 }
             }).fail(function(err){
@@ -128,6 +130,17 @@
                 )
             }
         }
+        function showModelByMake() {
+            var makeId = $("#FindMake").val();
+            $("#FindModel option").each(function () {
+                let model = $(this);
+                if (model.attr("id") === makeId) {
+                    model.show();
+                } else {
+                    model.hide();
+                }
+            })
+        }
     </script>
 </head>
 <body>
@@ -146,7 +159,7 @@
     <div class="row pt-2 row-cols-auto justify-content-center">
         <div class="col-6 col-md-2">
             Марка
-            <select class='form-select' aria-label='multiple select example' id='FindMake'>
+            <select class='form-select' aria-label='multiple select example' id='FindMake' onchange="showModelByMake()">
             </select>
         </div>
         <div class="col-6 col-md-2">

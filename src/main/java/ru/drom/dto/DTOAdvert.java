@@ -20,7 +20,7 @@ public class DTOAdvert {
     private int mileage;
     private int price;
     private int photoId;
-    private boolean status;
+    private boolean sold;
     private User user;
     private LocalDateTime created;
 }

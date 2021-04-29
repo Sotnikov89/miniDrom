@@ -21,9 +21,10 @@ public class DaoAdvert implements Dao<Advert> {
 
     public List<Advert> findAllThisDay() {
         return hibernateConnect.sessionMethodsWithReturn(
-                session -> session.createQuery(basicSql + "where advert.created between :start and :end")
+                session -> session.createQuery(basicSql + "where advert.sold = :sold and advert.created between :start and :end")
                         .setParameter("end", LocalDate.now().plusDays(1).atStartOfDay())
                         .setParameter("start", LocalDate.now().atStartOfDay())
+                        .setParameter("sold", false)
                         .list());
     }
 

@@ -42,8 +42,16 @@ public class DefaultServiceAdvert implements ServiceAdvert {
     public List<Advert> findAllThisDay() { return daoAdvert.findAllThisDay(); }
 
     @Override
+    public List<Advert> findAllAtive() {
+        List <Advert> adverts = findAll();
+        adverts.removeIf(Advert::isSold);
+        return adverts;
+    }
+
+    @Override
     public List<Advert> findByFilter(HttpServletRequest req) {
         List<Advert> adverts = findAll();
+        adverts.removeIf(Advert::isSold);
         String make = req.getParameter("make");
         if (make != null) { adverts.removeIf(advert -> advert.getModel().getMake().getId() != Integer.parseInt(make)); }
         String model = req.getParameter("model");
