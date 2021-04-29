@@ -1,5 +1,6 @@
 package ru.drom.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,8 +16,7 @@ public class Model {
     private int id;
     @Column(unique = true)
     private String name;
-    @ManyToOne
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
+    @ManyToOne (fetch = FetchType.LAZY)
+    @JsonIgnore
     private Make make;
 }

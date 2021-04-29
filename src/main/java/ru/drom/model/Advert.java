@@ -1,9 +1,12 @@
 package ru.drom.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -18,15 +21,16 @@ public class Advert {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String description;
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private Model model;
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private TypeBody typeBody;
     private int mileage;
     private int price;
     private int photoId;
-    private boolean status;
-    @ManyToOne
+    private int yearOfIssue;
+    private boolean sold;
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
     private LocalDateTime created;
 }

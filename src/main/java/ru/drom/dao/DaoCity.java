@@ -4,13 +4,13 @@ import ru.drom.model.City;
 
 import java.util.List;
 
-public class DaoCity implements Dao<City>{
+public class DaoCity implements Dao<City> {
 
     private final HibernateConnect hibernateConnect;
 
-    public DaoCity() {
-        hibernateConnect = HibernateConnect.instOf();
-    }
+    private DaoCity() { hibernateConnect = HibernateConnect.instOf(); }
+
+    public static DaoCity instOf() { return new DaoCity(); }
 
     @Override
     public City findById(int id) {
@@ -19,12 +19,13 @@ public class DaoCity implements Dao<City>{
 
     @Override
     public List<City> findAll() {
-        return hibernateConnect.sessionMethodsWithReturn(session -> session.createQuery("from City")).list();
+        return hibernateConnect.sessionMethodsWithReturn(session -> session.createQuery("from City").list());
     }
 
     @Override
     public City save(City city) {
-        return (City) hibernateConnect.sessionMethodsWithReturn(session -> session.save(city));
+        int id = (int) hibernateConnect.sessionMethodsWithReturn(session -> session.save(city));
+        return findById(id);
     }
 
     @Override

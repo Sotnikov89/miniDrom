@@ -9,56 +9,49 @@ public class DaoAdvert implements Dao<Advert> {
 
     private final HibernateConnect hibernateConnect;
 
-    public DaoAdvert() {
+    private DaoAdvert() {
         hibernateConnect = HibernateConnect.instOf();
     }
 
+    public static DaoAdvert instOf() { return new DaoAdvert(); }
+
+    private String basicSql = "select advert from Advert advert "
+            + "join fetch advert.user user join fetch user.city city join fetch advert.model model "
+            + "join fetch model.make make join fetch advert.typeBody typeBody ";
+
     public List<Advert> findAllThisDay() {
-        return hibernateConnect.sessionMethodsWithReturn(session -> session.createQuery("select advert from Advert advert " +
-                "join fetch advert.user user join fetch user.city city join fetch advert.model model " +
-                "join fetch model.make make join fetch advert.typeBody typeBody " +
-                "where advert.created between :start and :end")
-                .setParameter("start", LocalDate.now().atStartOfDay())
-                .setParameter("end", LocalDate.now().plusDays(1).atStartOfDay())
-                .list();
+        return hibernateConnect.sessionMethodsWithReturn(
+                session -> session.createQuery(basicSql + "where advert.created between :start and :end")
+                        .setParameter("end", LocalDate.now().plusDays(1).atStartOfDay())
+                        .setParameter("start", LocalDate.now().atStartOfDay())
+                        .list());
     }
 
-    public List<Advert> findAllWithPhoto() {
-        return hibernateConnect.sessionMethodsWithReturn(session -> session.createQuery("select advert from Advert advert " +
-                "join fetch advert.user user join fetch user.city city join fetch advert.model model " +
-                "join fetch model.make make join fetch advert.typeBody typeBody " +
-                "where advert.photoId is not null")
-                .list();
-    }
-
-    public List<Advert> findAllByMake(String make) {
-        return hibernateConnect.sessionMethodsWithReturn(session -> session.createQuery("select advert from Advert advert " +
-                "join fetch advert.user user join fetch user.city city join fetch advert.model model " +
-                "join fetch model.make make join fetch advert.typeBody typeBody " +
-                "where make.name = :name")
-                .setParameter("name", make)
-                .list();
+    public List<Advert> findAllByUserId(int userId) {
+        return hibernateConnect.sessionMethodsWithReturn(
+                session -> session.createQuery(basicSql + "where user.id = :id")
+                        .setParameter("id", userId)
+                        .list());
     }
 
     @Override
     public Advert findById(int id) {
-        return hibernateConnect.sessionMethodsWithReturn(session -> session.createQuery("select advert from Advert advert" +
-                " join fetch advert.user user join fetch user.city city join fetch advert.model model" +
-                " join fetch model.make make join fetch advert.typeBody typeBody where advert.id = :id", Advert.class))
-                .setParameter("id", id).uniqueResult();
+        return (Advert) hibernateConnect.sessionMethodsWithReturn(
+                session -> session.createQuery(basicSql + "where advert.id = :id")
+                        .setParameter("id", id)
+                        .uniqueResult());
     }
 
     @Override
     public List<Advert> findAll() {
-        return hibernateConnect.sessionMethodsWithReturn(session -> session.createQuery("select advert from Advert advert" +
-                " join fetch advert.user user join fetch user.city city join fetch advert.model model" +
-                " join fetch model.make make join fetch advert.typeBody typeBody", Advert.class))
-                .list();
+        return hibernateConnect.sessionMethodsWithReturn(session -> session.createQuery(basicSql).list());
     }
 
     @Override
     public Advert save(Advert advert) {
-        return (Advert) hibernateConnect.sessionMethodsWithReturn(session -> session.save(advert));
+        int id = (int) hibernateConnect.sessionMethodsWithReturn(session -> session.save(advert));
+        advert.setId(id);
+        return advert;
     }
 
     @Override

@@ -14,14 +14,10 @@ public class HibernateConnect {
 
     private final StandardServiceRegistry registry;
     private final SessionFactory sf;
-    private final Session session;
-    final Transaction tx;
 
     private HibernateConnect() {
         registry = new StandardServiceRegistryBuilder().configure().build();
         sf = new MetadataSources(registry).buildMetadata().buildSessionFactory();
-        session = sf.openSession();
-        tx = session.beginTransaction();
     }
 
     public static HibernateConnect instOf() {
@@ -29,6 +25,8 @@ public class HibernateConnect {
     }
 
     public <T> T sessionMethodsWithReturn(final Function<Session, T> command) {
+        final Session session = sf.openSession();
+        final Transaction tx = session.beginTransaction();
         try {
             T rsl = command.apply(session);
             tx.commit();
@@ -42,6 +40,8 @@ public class HibernateConnect {
     }
 
     public void sessionVoidMethods(final Consumer<Session> command) {
+        final Session session = sf.openSession();
+        final Transaction tx = session.beginTransaction();
         try {
             command.accept(session);
             tx.commit();

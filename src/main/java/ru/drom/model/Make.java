@@ -1,12 +1,10 @@
 package ru.drom.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Data
@@ -19,6 +17,8 @@ public class Make {
     private int id;
     @Column(unique = true)
     private String name;
-    @OneToMany(mappedBy = "make")
-    private Set<Model> models;
+    @OneToMany(mappedBy = "make", fetch = FetchType.LAZY)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private List<Model> models;
 }

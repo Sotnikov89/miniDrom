@@ -8,9 +8,11 @@ public class DaoTypeBody implements Dao<TypeBody> {
 
     private final HibernateConnect hibernateConnect;
 
-    public DaoTypeBody() {
+    private DaoTypeBody() {
         hibernateConnect = HibernateConnect.instOf();
     }
+
+    public static DaoTypeBody instOf() { return new DaoTypeBody(); }
 
     @Override
     public TypeBody findById(int id) {
@@ -19,12 +21,13 @@ public class DaoTypeBody implements Dao<TypeBody> {
 
     @Override
     public List<TypeBody> findAll() {
-        return hibernateConnect.sessionMethodsWithReturn(session -> session.createQuery("from TypeBody")).list();
+        return hibernateConnect.sessionMethodsWithReturn(session -> session.createQuery("from TypeBody").list());
     }
 
     @Override
     public TypeBody save(TypeBody typeBody) {
-        return (TypeBody) hibernateConnect.sessionMethodsWithReturn(session -> session.save(typeBody));
+        int id = (int) hibernateConnect.sessionMethodsWithReturn(session -> session.save(typeBody));
+        return findById(id);
     }
 
     @Override

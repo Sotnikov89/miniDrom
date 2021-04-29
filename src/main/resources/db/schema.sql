@@ -36,7 +36,8 @@ CREATE TABLE advert (
                       mileage int,
                       price int,
                       photoId int,
-                      status boolean,
+                      yearOfIssue int,
+                      sold boolean,
                       users int not null references users(id),
                       created date not null
 );

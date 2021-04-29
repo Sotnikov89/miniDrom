@@ -4,27 +4,39 @@ import ru.drom.model.User;
 
 import java.util.List;
 
-public class DaoUser implements Dao<User>{
+public class DaoUser implements Dao<User> {
 
     private final HibernateConnect hibernateConnect;
 
-    public DaoUser() {
+    private DaoUser() {
         hibernateConnect = HibernateConnect.instOf();
+    }
+
+    public static DaoUser instOf() { return new DaoUser(); }
+
+    public User findByEmail(String email) {
+        return (User) hibernateConnect.sessionMethodsWithReturn(session -> session.createQuery(
+                "select user from User user join fetch user.city city where user.email = :email")
+                .setParameter("email", email).uniqueResult());
     }
 
     @Override
     public User findById(int id) {
-        return hibernateConnect.sessionMethodsWithReturn(session -> session.get(User.class, id));
+        return (User) hibernateConnect.sessionMethodsWithReturn(session -> session.createQuery(
+                "select user from User user join fetch user.city city where user.id = :id")
+                .setParameter("id", id).uniqueResult());
     }
 
     @Override
     public List<User> findAll() {
-        return hibernateConnect.sessionMethodsWithReturn(session -> session.createQuery("select user from User user join fetch user.city city")).list();
+        return hibernateConnect.sessionMethodsWithReturn(session -> session.createQuery(
+                "select user from User user join fetch user.city city").list());
     }
 
     @Override
     public User save(User user) {
-        return (User) hibernateConnect.sessionMethodsWithReturn(session -> session.save(user));
+        int id = (int) hibernateConnect.sessionMethodsWithReturn(session -> session.save(user));
+        return findById(id);
     }
 
     @Override
