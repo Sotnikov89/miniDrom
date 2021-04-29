@@ -1,28 +1,28 @@
 CREATE TABLE make (
                         id serial primary key,
-                        name varchar (50) not null, unique
+                        name varchar (50) unique not null
 );
 
 CREATE TABLE model (
                      id serial primary key,
-                     name varchar (50) not null, unique,
+                     name varchar (50) unique not null,
                      make int not null references make(id)
 );
 
 CREATE TABLE city (
                     id serial primary key,
-                    name varchar (50) not null, unique
+                    name varchar (50) unique not null
 );
 
 CREATE TABLE typebody (
                       id serial primary key,
-                      name varchar (50) not null, unique
+                      name varchar (50) unique not null
 );
 
 CREATE TABLE users (
                     id serial primary key,
-                    name varchar (50) not null, unique,
-                    email varchar (50) not null, unique,
+                    name varchar (50) unique not null,
+                    email varchar (50) unique not null,
                     password varchar (50) not null,
                     city int not null references city(id)
 );
