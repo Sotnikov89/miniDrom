@@ -42,29 +42,13 @@ public class DefaultServiceAdvert implements ServiceAdvert {
     public List<Advert> findAllThisDay() { return daoAdvert.findAllThisDay(); }
 
     @Override
-    public List<Advert> findAllAtive() {
-        List <Advert> adverts = findAll();
-        adverts.removeIf(Advert::isSold);
-        return adverts;
+    public List<Advert> findAllActive() {
+        return daoAdvert.findAllActive();
     }
 
     @Override
-    public List<Advert> findByFilter(HttpServletRequest req) {
-        List<Advert> adverts = findAll();
-        adverts.removeIf(Advert::isSold);
-        String make = req.getParameter("make");
-        if (make != null) { adverts.removeIf(advert -> advert.getModel().getMake().getId() != Integer.parseInt(make)); }
-        String model = req.getParameter("model");
-        if (model != null) { adverts.removeIf(advert -> advert.getModel().getId() != Integer.parseInt(model)); }
-        String type = req.getParameter("type");
-        if (type != null) { adverts.removeIf(advert -> advert.getTypeBody().getId() != Integer.parseInt(type)); }
-        String mileage = req.getParameter("mileage");
-        if (mileage != null) { adverts.removeIf(advert -> advert.getMileage() > Integer.parseInt(mileage)); }
-        String price = req.getParameter("price");
-        if (price != null) { adverts.removeIf(advert -> advert.getPrice() > Integer.parseInt(price)); }
-        String photo = req.getParameter("photo");
-        if (photo.equals("true")) { adverts.removeIf(advert -> advert.getPhotoId() == 0); }
-        return adverts;
+    public List<Advert> findByFilter(int make, int model, int type, int mileage, int price, boolean photo) {
+        return daoAdvert.findAllByFilterOrNull(make, model, type, mileage, price, photo);
     }
 
     @Override
@@ -127,13 +111,15 @@ public class DefaultServiceAdvert implements ServiceAdvert {
                         advert.setYearOfIssue(Integer.parseInt(fieldValue));
                     }
                 } else {
-                    File file = new File(folder + File.separator
-                            + advert.getId() + "."
-                            + Files.getFileExtension(item.getName()));
-                    try (FileOutputStream out = new FileOutputStream(file)) {
-                        out.write(item.getInputStream().readAllBytes());
+                    if (item.getSize() != 0) {
+                        File file = new File(folder + File.separator
+                                + advert.getId() + "."
+                                + Files.getFileExtension(item.getName()));
+                        try (FileOutputStream out = new FileOutputStream(file)) {
+                            out.write(item.getInputStream().readAllBytes());
+                        }
+                        advert.setPhotoId(advert.getId());
                     }
-                    advert.setPhotoId(advert.getId());
                 }
                 update(advert);
             }

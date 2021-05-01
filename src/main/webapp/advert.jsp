@@ -20,7 +20,6 @@
             $.ajax({
                 type: 'GET',
                 url: 'make',
-                dataType: 'json',
             }).done(function(data) {
                 for(let i=0; i<data.length; i++) {
                     $("#make").append(new Option(data[i].name, data[i].id));
@@ -36,7 +35,6 @@
             $.ajax({
                 type: 'GET',
                 url: 'type',
-                dataType: 'json',
             }).done(function(data) {
                 for(let i=0; i<data.length; i++) {
                     $("#type").append(new Option(data[i].name, data[i].id));
@@ -47,7 +45,6 @@
             $.ajax({
                 type: 'GET',
                 url: 'advert',
-                dataType: 'json',
                 data: {getByUser: true},
             }).done(function(data) {
                 $('#exit').after("<div class='col-md-auto'> <h4>" + "Здравствуйте " + data[0].user.name + "!</h4></div>")
@@ -98,7 +95,9 @@
                                 "</div>" +
                             "</div>" +
                             "<div class='row justify-content-center'>" +
-                                "Описание: " + data[i].description +
+                                "<div class='col-6'>" +
+                                   data[i].description +
+                                "</div>" +
                             "</div>" +
                         "</div>"
                     )
@@ -123,7 +122,6 @@
             $.ajax({
                 type: 'POST',
                 url: 'advert',
-                dataType: 'json',
                 data: {id: id, sold: sw.checked},
             }).done(function() {
             })

@@ -27,7 +27,7 @@ public class ServletAdvert extends HttpServlet {
             resp.setContentType("application/json");
             ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
             if (req.getParameter("getAll") != null) {
-                List<Advert> adverts = DefaultServiceAdvert.instOf().findAllAtive();
+                List<Advert> adverts = DefaultServiceAdvert.instOf().findAllActive();
                 List<DTOAdvert> dtoAdverts = new ImplAdvertMapper().advertsToDtoAdverts(adverts);
                 resp.getWriter().write(objectMapper.writeValueAsString(dtoAdverts));
             } else {
@@ -42,7 +42,13 @@ public class ServletAdvert extends HttpServlet {
                         List<DTOAdvert> dtoAdverts = new ImplAdvertMapper().advertsToDtoAdverts(adverts);
                         resp.getWriter().write(objectMapper.writeValueAsString(dtoAdverts));
                     } else {
-                        List<Advert> adverts = DefaultServiceAdvert.instOf().findByFilter(req);
+                        List<Advert> adverts = DefaultServiceAdvert.instOf().findByFilter(
+                                Integer.parseInt(req.getParameter("make")),
+                                Integer.parseInt(req.getParameter("model")),
+                                Integer.parseInt(req.getParameter("type")),
+                                tryParseIntOrNull(req.getParameter("mileage")),
+                                tryParseIntOrNull(req.getParameter("price")),
+                                req.getParameter("photo").equals("true"));
                         List<DTOAdvert> dtoAdverts = new ImplAdvertMapper().advertsToDtoAdverts(adverts);
                         resp.getWriter().write(objectMapper.writeValueAsString(dtoAdverts));
                     }
@@ -50,6 +56,14 @@ public class ServletAdvert extends HttpServlet {
             }
         } else {
             req.getRequestDispatcher("advert.jsp").forward(req, resp);
+        }
+    }
+
+    public int tryParseIntOrNull(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return 0;
         }
     }
 

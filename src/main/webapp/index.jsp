@@ -20,7 +20,6 @@
             $.ajax({
                 type: 'GET',
                 url: 'make',
-                dataType: 'json',
             }).done(function(data) {
                 for(let i=0; i<data.length; i++) {
                     $("#FindMake").append(new Option(data[i].name, data[i].id));
@@ -36,7 +35,6 @@
             $.ajax({
                 type: 'GET',
                 url: 'type',
-                dataType: 'json',
             }).done(function(data) {
                 for(let i=0; i<data.length; i++) {
                     $("#FindType").append(new Option(data[i].name, data[i].id));
@@ -51,7 +49,6 @@
             $.ajax({
                 type: 'GET',
                 url: 'advert',
-                dataType: 'json',
                 data: {getAll: true},
             }).done(function(data) {
                 renderData(data);
@@ -64,7 +61,6 @@
             $.ajax({
                 type: 'GET',
                 url: 'advert',
-                dataType: 'json',
                 data: {getByToday: true},
             }).done(function(data) {
                 renderData(data);
@@ -80,7 +76,6 @@
             $.ajax({
                 type: 'GET',
                 url: 'advert',
-                dataType: 'json',
                 data: object,
             }).done(function(data) {
                 renderData(data);

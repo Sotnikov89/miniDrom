@@ -13,7 +13,7 @@ public interface ServiceAdvert extends Dao<Advert> {
 
     List<Advert> findAllThisDay();
 
-    List<Advert> findAllAtive();
+    List<Advert>  findAllActive();
 
-    List<Advert> findByFilter(HttpServletRequest req);
+    List<Advert> findByFilter(int make, int model, int type, int mileage, int price, boolean photo);
 }
