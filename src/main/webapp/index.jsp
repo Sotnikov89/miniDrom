@@ -170,11 +170,11 @@
     </div>
     <div class="row pt-2 row-cols-auto justify-content-center">
         <div class="col-6 col-md-2">
-            Цена
+            Цена, не больше
             <input type="text" class="form-control" size="10" id="FindPrice">
         </div>
         <div class="col-6 col-md-2">
-            Пробег
+            Пробег, не больше
             <input type="text" class="form-control" size="7" id="FindMileage">
         </div>
         <div class="col-8 col-md-2 pt-4">

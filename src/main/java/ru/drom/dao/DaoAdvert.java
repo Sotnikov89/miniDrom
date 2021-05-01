@@ -41,17 +41,17 @@ public class DaoAdvert implements Dao<Advert> {
                     .list());
         }
         if (mileage == 0 & price != 0 & photo) {  // make+model+type - with photo and price
-            return hibernateConnect.sessionMethodsWithReturn(session -> session.createQuery(basicSql + mmt + " and advert.photoId not in (0) and advert.price = :price")
+            return hibernateConnect.sessionMethodsWithReturn(session -> session.createQuery(basicSql + mmt + " and advert.photoId not in (0) and advert.price <= :price")
                     .setParameter("model", model).setParameter("make", make).setParameter("type", type).setParameter("price", price)
                     .list());
         }
         if (mileage != 0 & price != 0 & photo) {  // make+model+type - with photo,price and mileage
-            return hibernateConnect.sessionMethodsWithReturn(session -> session.createQuery(basicSql + mmt + " and advert.photoId not in (0) and advert.price = :price and advert.mileage = :mileage")
+            return hibernateConnect.sessionMethodsWithReturn(session -> session.createQuery(basicSql + mmt + " and advert.photoId not in (0) and advert.price <= :price and advert.mileage <= :mileage")
                     .setParameter("model", model).setParameter("make", make).setParameter("type", type).setParameter("price", price).setParameter("mileage", mileage)
                     .list());
         }
         if (mileage != 0 & price == 0 & !photo) {  // make+model+type - with mileage
-            return hibernateConnect.sessionMethodsWithReturn(session -> session.createQuery(basicSql + mmt + " and advert.mileage = :mileage")
+            return hibernateConnect.sessionMethodsWithReturn(session -> session.createQuery(basicSql + mmt + " and advert.mileage <= :mileage")
                     .setParameter("model", model).setParameter("make", make).setParameter("type", type).setParameter("mileage", mileage)
                     .list());
         }
@@ -61,12 +61,12 @@ public class DaoAdvert implements Dao<Advert> {
                     .list());
         }
         if (mileage == 0 & price != 0 & !photo) {  // make+model+type - with price
-            return hibernateConnect.sessionMethodsWithReturn(session -> session.createQuery(basicSql + mmt + " and advert.price = :price")
+            return hibernateConnect.sessionMethodsWithReturn(session -> session.createQuery(basicSql + mmt + " and advert.price <= :price")
                     .setParameter("model", model).setParameter("make", make).setParameter("type", type).setParameter("price", price)
                     .list());
         }
         if (mileage != 0 & price == 0 & photo) {  // make+model+type - with mileage and photo
-            return hibernateConnect.sessionMethodsWithReturn(session -> session.createQuery(basicSql + mmt + " and advert.photoId not in (0) and advert.mileage = :mileage")
+            return hibernateConnect.sessionMethodsWithReturn(session -> session.createQuery(basicSql + mmt + " and advert.photoId not in (0) and advert.mileage <= :mileage")
                     .setParameter("model", model).setParameter("make", make).setParameter("type", type).setParameter("mileage", mileage)
                     .list());
         }
