@@ -14,7 +14,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.AbstractMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @WebServlet(name = "ServletAdvert", urlPatterns = "/advert")
 public class ServletAdvert extends HttpServlet {
@@ -42,13 +46,17 @@ public class ServletAdvert extends HttpServlet {
                         List<DTOAdvert> dtoAdverts = new ImplAdvertMapper().advertsToDtoAdverts(adverts);
                         resp.getWriter().write(objectMapper.writeValueAsString(dtoAdverts));
                     } else {
-                        List<Advert> adverts = DefaultServiceAdvert.instOf().findByFilter(
-                                Integer.parseInt(req.getParameter("make")),
-                                Integer.parseInt(req.getParameter("model")),
-                                Integer.parseInt(req.getParameter("type")),
-                                tryParseIntOrNull(req.getParameter("mileage")),
-                                tryParseIntOrNull(req.getParameter("price")),
-                                req.getParameter("photo").equals("true"));
+                        Map<String, Integer> param = Stream.of(
+                                new AbstractMap.SimpleEntry<>("make", Integer.parseInt(req.getParameter("make"))),
+                                new AbstractMap.SimpleEntry<>("model", Integer.parseInt(req.getParameter("model"))),
+                                new AbstractMap.SimpleEntry<>("type", Integer.parseInt(req.getParameter("type"))),
+                                new AbstractMap.SimpleEntry<>("mileage", parseIntOr0(req.getParameter("mileage"))),
+                                new AbstractMap.SimpleEntry<>("price", parseIntOr0(req.getParameter("price"))),
+                                new AbstractMap.SimpleEntry<>("photo", req.getParameter("photo").equals("true")?1:0)
+                                )
+                                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+                        List<Advert> adverts = DefaultServiceAdvert.instOf().findAllByFilter(param);
                         List<DTOAdvert> dtoAdverts = new ImplAdvertMapper().advertsToDtoAdverts(adverts);
                         resp.getWriter().write(objectMapper.writeValueAsString(dtoAdverts));
                     }
@@ -59,12 +67,8 @@ public class ServletAdvert extends HttpServlet {
         }
     }
 
-    public int tryParseIntOrNull(String value) {
-        try {
-            return Integer.parseInt(value);
-        } catch (NumberFormatException e) {
-            return 0;
-        }
+    private int parseIntOr0(String value) {
+        return value!="" ? Integer.parseInt(value) : 0;
     }
 
     @Override

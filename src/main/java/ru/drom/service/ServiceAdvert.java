@@ -5,6 +5,7 @@ import ru.drom.model.Advert;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 public interface ServiceAdvert extends Dao<Advert> {
     void saveAdvertByReq(HttpServletRequest req);
@@ -15,5 +16,5 @@ public interface ServiceAdvert extends Dao<Advert> {
 
     List<Advert>  findAllActive();
 
-    List<Advert> findByFilter(int make, int model, int type, int mileage, int price, boolean photo);
+    List<Advert> findAllByFilter(Map<String, Integer> param);
 }

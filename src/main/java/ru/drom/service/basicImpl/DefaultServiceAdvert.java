@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 public class DefaultServiceAdvert implements ServiceAdvert {
 
@@ -47,8 +48,8 @@ public class DefaultServiceAdvert implements ServiceAdvert {
     }
 
     @Override
-    public List<Advert> findByFilter(int make, int model, int type, int mileage, int price, boolean photo) {
-        return daoAdvert.findAllByFilterOrNull(make, model, type, mileage, price, photo);
+    public List<Advert> findAllByFilter(Map<String, Integer> param) {
+        return daoAdvert.findAllByFilter(param);
     }
 
     @Override
