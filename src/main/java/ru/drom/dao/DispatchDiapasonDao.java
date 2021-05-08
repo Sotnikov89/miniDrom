@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public class DispatchDiapason {
+public class DispatchDiapasonDao {
 
     private final Map<Function<Map<String, Integer>, Boolean>, Function<Map<String, Integer>, List<Advert>>> dispat = new HashMap<>();
 
@@ -16,7 +16,7 @@ public class DispatchDiapason {
             + "join fetch model.make make join fetch advert.typeBody typeBody "
             + "where model.id = :model and make.id = :make and typeBody.id = :type and advert.sold = false";
 
-    public DispatchDiapason init() {
+    public DispatchDiapasonDao init() {
         this.dispat.put(
                 map -> map.get("mileage") == 0 && map.get("price") == 0 && map.get("photo") != 0,
                 map -> HibernateConnect.instOf().sessionMethodsWithReturn(session -> session.createQuery(sql + " and advert.photoId not in (0)")

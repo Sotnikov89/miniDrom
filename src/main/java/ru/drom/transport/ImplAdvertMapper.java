@@ -6,7 +6,7 @@ import ru.drom.model.Advert;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ImplAdvertMapper implements AdvertMapper{
+public class ImplAdvertMapper implements AdvertMapper {
 
     @Override
     public DTOAdvert advertToDtoAdvert(Advert advert) {

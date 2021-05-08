@@ -30,45 +30,28 @@ public class ServletAdvert extends HttpServlet {
             resp.setCharacterEncoding("UTF-8");
             resp.setContentType("application/json");
             ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
-            if (req.getParameter("getAll") != null) {
-                List<Advert> adverts = DefaultServiceAdvert.instOf().findAllActive();
-                List<DTOAdvert> dtoAdverts = new ImplAdvertMapper().advertsToDtoAdverts(adverts);
-                resp.getWriter().write(objectMapper.writeValueAsString(dtoAdverts));
-            } else {
-                if (req.getParameter("getByUser") != null) {
-                    User user = (User) req.getSession().getAttribute("user");
-                    List<Advert> adverts = DefaultServiceAdvert.instOf().findAllByUserId(user.getId());
-                    List<DTOAdvert> dtoAdverts = new ImplAdvertMapper().advertsToDtoAdverts(adverts);
-                    resp.getWriter().write(objectMapper.writeValueAsString(dtoAdverts));
-                } else {
-                    if (req.getParameter("getByToday") != null) {
-                        List<Advert> adverts = DefaultServiceAdvert.instOf().findAllThisDay();
-                        List<DTOAdvert> dtoAdverts = new ImplAdvertMapper().advertsToDtoAdverts(adverts);
-                        resp.getWriter().write(objectMapper.writeValueAsString(dtoAdverts));
-                    } else {
-                        Map<String, Integer> param = Stream.of(
-                                new AbstractMap.SimpleEntry<>("make", Integer.parseInt(req.getParameter("make"))),
-                                new AbstractMap.SimpleEntry<>("model", Integer.parseInt(req.getParameter("model"))),
-                                new AbstractMap.SimpleEntry<>("type", Integer.parseInt(req.getParameter("type"))),
-                                new AbstractMap.SimpleEntry<>("mileage", parseIntOr0(req.getParameter("mileage"))),
-                                new AbstractMap.SimpleEntry<>("price", parseIntOr0(req.getParameter("price"))),
-                                new AbstractMap.SimpleEntry<>("photo", req.getParameter("photo").equals("true")?1:0)
-                                )
-                                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
-                        List<Advert> adverts = DefaultServiceAdvert.instOf().findAllByFilter(param);
-                        List<DTOAdvert> dtoAdverts = new ImplAdvertMapper().advertsToDtoAdverts(adverts);
-                        resp.getWriter().write(objectMapper.writeValueAsString(dtoAdverts));
-                    }
-                }
-            }
+            User user = (User) req.getSession().getAttribute("user");
+            Map<String, Integer> param = Stream.of(
+                    new AbstractMap.SimpleEntry<>("getAll", req.getParameter("getAll")==null ? 0 : 1),
+                    new AbstractMap.SimpleEntry<>("getByUser", req.getParameter("getByUser")==null ? 0 : user.getId()),
+                    new AbstractMap.SimpleEntry<>("getByToday", req.getParameter("getByToday")==null ? 0 : 1),
+                    new AbstractMap.SimpleEntry<>("make", parseIntOr0(req.getParameter("make"))),
+                    new AbstractMap.SimpleEntry<>("model", parseIntOr0(req.getParameter("model"))),
+                    new AbstractMap.SimpleEntry<>("type", parseIntOr0(req.getParameter("type"))),
+                    new AbstractMap.SimpleEntry<>("mileage", parseIntOr0(req.getParameter("mileage"))),
+                    new AbstractMap.SimpleEntry<>("price", parseIntOr0(req.getParameter("price"))),
+                    new AbstractMap.SimpleEntry<>("photo", req.getParameter("photo")!=null && req.getParameter("photo").equals("true") ? 1 : 0)
+            )
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            List<DTOAdvert> adverts = new DispatchDiapasonServ().init().filter(param);
+            resp.getWriter().write(objectMapper.writeValueAsString(adverts));
         } else {
             req.getRequestDispatcher("advert.jsp").forward(req, resp);
         }
     }
 
     private int parseIntOr0(String value) {
-        return value!="" ? Integer.parseInt(value) : 0;
+        return value!=null && !value.equals("") ? Integer.parseInt(value) : 0;
     }
 
     @Override

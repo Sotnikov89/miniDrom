@@ -3,11 +3,8 @@ package ru.drom.dao;
 import ru.drom.model.Advert;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 public class DaoAdvert implements Dao<Advert> {
 
@@ -42,7 +39,7 @@ public class DaoAdvert implements Dao<Advert> {
     }
 
     public List<Advert> findAllByFilter(Map<String, Integer> param) {
-        return new DispatchDiapason().init().filter(param);
+        return new DispatchDiapasonDao().init().filter(param);
     }
 
     @Override
