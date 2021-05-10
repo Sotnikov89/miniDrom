@@ -1,3 +1,6 @@
+<a href="https://travis-ci.com/github/Sotnikov89/miniDrom">
+  <img src="https://travis-ci.com/Sotnikov89/miniDrom.svg?branch=master" />
+</a>
 # Цель проекта
 Данный проект создавался для отработки изученного материала по Hibernate, HQL, аннотаций, реализации связей между сущностями, а также паттернов проектирования.
 Проект написан с использованием Lombok.
